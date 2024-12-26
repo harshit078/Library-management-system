@@ -17,25 +17,25 @@ describe('Library Management System', () => {
     };
   
     beforeEach(() => {
-      library = new Library();
+      library = new Library(); // Create a new library instance before each test
     });
   
     describe('Book Management', () => {
       it('should add a new book to the library', () => {
-        const book = library.addBook(testBook);
-        expect(book.isbn).toBe(testBook.isbn);
-        expect(library.getAvailableBooks().length).toBe(1);
+        const book = library.addBook(testBook); // Add a test book
+        expect(book.isbn).toBe(testBook.isbn); // Verify the book was added correctly
+        expect(library.getAvailableBooks().length).toBe(1); // Check available books count
       });
   
       it('should not allow duplicate books', () => {
-        library.addBook(testBook);
-        expect(() => library.addBook(testBook)).toThrow(DuplicateBookError);
+        library.addBook(testBook); // Add the test book
+        expect(() => library.addBook(testBook)).toThrow(DuplicateBookError); // Ensure duplicate throws error
       });
   
       it('should retrieve a book by ISBN', () => {
-        library.addBook(testBook);
-        const book = library.getBook(testBook.isbn);
-        expect(book.title).toBe(testBook.title);
+        library.addBook(testBook); // Add the test book
+        const book = library.getBook(testBook.isbn); // Retrieve the book by ISBN
+        expect(book.title).toBe(testBook.title); // Verify the retrieved book's title
       });
   
       it('should throw when getting non-existent book', () => {
@@ -51,23 +51,23 @@ describe('Library Management System', () => {
       });
   
       it('should allow borrowing an available book', () => {
-        const record = library.borrowBook(testBook.isbn, borrowerId);
-        expect(record.borrowerId).toBe(borrowerId);
-        expect(record.isbn).toBe(testBook.isbn);
-        expect(library.getAvailableBooks().length).toBe(0);
+        const record = library.borrowBook(testBook.isbn, borrowerId); // Borrow the book
+        expect(record.borrowerId).toBe(borrowerId); // Verify the borrower ID
+        expect(record.isbn).toBe(testBook.isbn); // Verify the borrowed book's ISBN
+        expect(library.getAvailableBooks().length).toBe(0); // Check that no books are available
       });
   
       it('should not allow borrowing an unavailable book', () => {
-        library.borrowBook(testBook.isbn, borrowerId);
+        library.borrowBook(testBook.isbn, borrowerId); // Borrow the book
         expect(() => library.borrowBook(testBook.isbn, borrowerId))
-          .toThrow(BookNotAvailableError);
+          .toThrow(BookNotAvailableError); // Ensure error for borrowing unavailable book
       });
   
       it('should allow returning a borrowed book', () => {
-        library.borrowBook(testBook.isbn, borrowerId);
-        const book = library.returnBook(testBook.isbn);
-        expect(book.available).toBe(true);
-        expect(library.getAvailableBooks().length).toBe(1);
+        library.borrowBook(testBook.isbn, borrowerId); // Borrow the book
+        const book = library.returnBook(testBook.isbn); // Return the book
+        expect(book.available).toBe(true); // Verify the book is now available
+        expect(library.getAvailableBooks().length).toBe(1); // Check available books count
       });
   
       it('should not allow returning a non-borrowed book', () => {
@@ -76,11 +76,11 @@ describe('Library Management System', () => {
       });
   
       it('should maintain accurate borrow history', () => {
-        library.borrowBook(testBook.isbn, borrowerId);
-        library.returnBook(testBook.isbn);
-        const history = library.getBorrowHistory(testBook.isbn);
-        expect(history.length).toBe(1);
-        expect(history[0].returnDate).toBeDefined();
+        library.borrowBook(testBook.isbn, borrowerId); // Borrow the book
+        library.returnBook(testBook.isbn); // Return the book
+        const history = library.getBorrowHistory(testBook.isbn); // Get borrow history
+        expect(history.length).toBe(1); // Ensure history has one entry
+        expect(history[0].returnDate).toBeDefined(); // Verify return date is defined
       });
     });
   
@@ -108,9 +108,9 @@ describe('Library Management System', () => {
         const availableBooks = library.getAvailableBooks();
   
         // Verify both books are available
-        expect(availableBooks.length).toBe(2);
-        expect(availableBooks.some(book => book.isbn === book1.isbn)).toBe(true);
-        expect(availableBooks.some(book => book.isbn === book2.isbn)).toBe(true);
+        expect(availableBooks.length).toBe(2); // Check the count of available books
+        expect(availableBooks.some(book => book.isbn === book1.isbn)).toBe(true); // Verify book1 is available
+        expect(availableBooks.some(book => book.isbn === book2.isbn)).toBe(true); // Verify book2 is available
       });
   
       it('should show correct available books after some are borrowed', () => {
@@ -128,19 +128,16 @@ describe('Library Management System', () => {
           year: 2022
         };
   
-        // Add both books
         library.addBook(book1);
         library.addBook(book2);
   
-        // Borrow one book
         library.borrowBook(book1.isbn, 'user123');
   
-        // Get available books
         const availableBooks = library.getAvailableBooks();
   
         // Verify only the non-borrowed book is available
-        expect(availableBooks.length).toBe(1);
-        expect(availableBooks[0].isbn).toBe(book2.isbn);
+        expect(availableBooks.length).toBe(1); // Check the count of available books
+        expect(availableBooks[0].isbn).toBe(book2.isbn); // Verify the available book is book2
       });
     });
   });
